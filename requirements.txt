@@ -1,6 +1,7 @@
 # Core Web Framework
 flask
 flask-cors
+flask-login
 
 # Environment Variables
 python-dotenv
