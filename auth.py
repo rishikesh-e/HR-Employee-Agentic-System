@@ -1,39 +1,57 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required
-from models import db, User
+
+from models import db, User, LeaveType, LeaveBalance
 
 auth_bp = Blueprint("auth", __name__)
 
+def assign_default_leaves(user):
+    leave_types = LeaveType.query.all()
+
+    for lt in leave_types:
+        db.session.add(LeaveBalance(
+            user_id=user.id,
+            leave_type_id=lt.id,
+            total_leaves=lt.default_days,
+            used_leaves=0
+        ))
+
+    db.session.commit()
+
 @auth_bp.route("/signup", methods=["POST"])
 def signup():
-    data = request.get_json()
+    data = request.json or request.form
 
     name = data.get("name")
     email = data.get("email")
     password = data.get("password")
-    role = data.get("role", "employee") 
+    role = data.get("role", "employee")
+
+    if not name or not email or not password:
+        return jsonify({"error": "Missing fields"}), 400
 
     if User.query.filter_by(email=email).first():
         return jsonify({"error": "User already exists"}), 400
 
-    hashed_password = generate_password_hash(password)
-
     user = User(
         name=name,
         email=email,
-        password=hashed_password,
+        password=generate_password_hash(password),
         role=role
     )
 
     db.session.add(user)
     db.session.commit()
 
-    return jsonify({"message": "User created successfully"})
+    assign_default_leaves(user)
+
+    return jsonify({"message": "User created successfully"}), 201
+
 
 @auth_bp.route("/login", methods=["POST"])
 def login():
-    data = request.get_json()
+    data = request.json or request.form
 
     email = data.get("email")
     password = data.get("password")
@@ -47,7 +65,10 @@ def login():
 
     return jsonify({
         "message": "Login successful",
-        "role": user.role
+        "user": {
+            "id": user.id,
+            "role": user.role
+        }
     })
 
 @auth_bp.route("/logout", methods=["POST"])

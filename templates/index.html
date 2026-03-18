@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Agentic System</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="dark-theme">
+    <div id="app">
+        
+        <!-- Auth View -->
+        <div id="auth-view" class="view">
+            <div class="auth-container glass-panel">
+                <div class="auth-header">
+                    <div class="logo-circle">
+                        <i class="ph ph-robot"></i>
+                    </div>
+                    <h2>Welcome Back</h2>
+                    <p>Sign in to access the HR Assistant</p>
+                </div>
+                
+                <form id="login-form">
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <div class="input-wrapper">
+                            <i class="ph ph-envelope"></i>
+                            <input type="email" id="email" required placeholder="Enter your email">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrapper">
+                            <i class="ph ph-lock-key"></i>
+                            <input type="password" id="password" required placeholder="Enter your password">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <span>Sign In</span>
+                        <i class="ph ph-arrow-right"></i>
+                    </button>
+                </form>
+                
+                <div class="auth-switch">
+                    Don't have an account? <a href="#" id="switch-to-signup">Sign up</a>
+                </div>
+            </div>
+            
+            <div class="auth-container glass-panel" id="signup-container" style="display: none;">
+                <div class="auth-header">
+                    <div class="logo-circle">
+                        <i class="ph ph-user-plus"></i>
+                    </div>
+                    <h2>Create Account</h2>
+                    <p>Join the HR portal today</p>
+                </div>
+                
+                <form id="signup-form">
+                    <div class="input-group">
+                        <label for="signup-name">Full Name</label>
+                        <div class="input-wrapper">
+                            <i class="ph ph-user"></i>
+                            <input type="text" id="signup-name" required placeholder="John Doe">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="signup-email">Email</label>
+                        <div class="input-wrapper">
+                            <i class="ph ph-envelope"></i>
+                            <input type="email" id="signup-email" required placeholder="john@example.com">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="signup-password">Password</label>
+                        <div class="input-wrapper">
+                            <i class="ph ph-lock-key"></i>
+                            <input type="password" id="signup-password" required placeholder="Strong password">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="signup-role">Role</label>
+                        <div class="input-wrapper">
+                            <i class="ph ph-briefcase"></i>
+                            <select id="signup-role" required>
+                                <option value="employee">Employee</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <span>Sign Up</span>
+                        <i class="ph ph-arrow-right"></i>
+                    </button>
+                </form>
+                
+                <div class="auth-switch">
+                    Already have an account? <a href="#" id="switch-to-login">Sign in</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard View -->
+        <div id="dashboard-view" class="view" style="display: none;">
+            <nav class="navbar glass-panel">
+                <div class="nav-brand">
+                    <i class="ph ph-robot nav-icon"></i>
+                    <span class="gradient-text">HR Agent</span>
+                </div>
+                <div class="nav-actions">
+                    <button id="theme-toggle" class="btn btn-icon btn-ghost" title="Toggle Theme">
+                        <i class="ph ph-sun"></i>
+                    </button>
+                    <div class="user-profile">
+                        <div class="avatar">
+                            <i class="ph ph-user"></i>
+                        </div>
+                        <span id="user-role-badge" class="badge">Employee</span>
+                    </div>
+                    <button id="logout-btn" class="btn btn-icon btn-ghost" title="Logout">
+                        <i class="ph ph-sign-out"></i>
+                    </button>
+                </div>
+            </nav>
+
+            <main class="main-content">
+                <div class="chat-container glass-panel">
+                    <div class="chat-header">
+                        <div class="agent-info">
+                            <div class="agent-avatar active">
+                                <i class="ph ph-robot"></i>
+                            </div>
+                            <div>
+                                <h3>AI HR Assistant</h3>
+                                <p class="status">Online | Ready to help</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages" id="chat-messages">
+                        <!-- Welcome message -->
+                        <div class="message system">
+                            <div class="message-content">
+                                <p>Welcome! I'm your AI HR Assistant.</p>
+                                <div class="suggestions">
+                                    <button class="suggestion-chip">What is my leave balance?</button>
+                                    <button class="suggestion-chip">I want to apply for sick leave</button>
+                                    <button class="suggestion-chip">Show company holidays</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-container">
+                        <form id="chat-form">
+                            <div class="input-wrapper chat-input-wrapper">
+                                <input type="text" id="chat-input" placeholder="Ask me anything..." autocomplete="off">
+                                <button type="button" id="mic-btn" class="btn-mic" title="Voice Input">
+                                    <i class="ph ph-microphone"></i>
+                                </button>
+                                <button type="submit" id="send-btn" class="btn-send">
+                                    <i class="ph ph-paper-plane-right"></i>
+                                </button>
+                            </div>
+                        </form>
+                        <div class="typing-indicator" id="typing-indicator" style="display: none;">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <span>Agent is thinking...</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
