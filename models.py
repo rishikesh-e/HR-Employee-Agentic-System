@@ -13,13 +13,14 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(255), nullable=False)
 
     role = db.Column(db.String(20), nullable=False)  
-    # "admin" or "employee"
-
+    
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # relationships
     leave_balance = db.relationship("LeaveBalance", backref="user", uselist=False)
     leaves = db.relationship("LeaveRequest", backref="user", lazy=True)
+    
+    def get_id(self):
+        return str(self.id)
 
 class LeaveBalance(db.Model):
     __tablename__ = "leave_balances"
@@ -45,8 +46,7 @@ class LeaveRequest(db.Model):
 
     reason = db.Column(db.String(255))
 
-    status = db.Column(db.String(20), default="pending")  
-    # pending / approved / rejected
+    status = db.Column(db.String(20), default="pending")
 
     applied_at = db.Column(db.DateTime, default=datetime.utcnow)
 
