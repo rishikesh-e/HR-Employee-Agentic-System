@@ -1,0 +1,29 @@
+# Core Web Framework
+flask
+flask-cors
+
+# Environment Variables
+python-dotenv
+
+# Database
+sqlalchemy
+psycopg2-binary
+
+# APIs
+openai
+groq
+
+# HTTP Requests
+requests
+
+# Data Handling
+pydantic
+
+# Async Support
+aiohttp
+
+# Utilities
+python-dateutil
+
+# Deployment
+gunicorn
